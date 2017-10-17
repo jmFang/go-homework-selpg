@@ -118,7 +118,21 @@ struct
 
 ![](https://github.com/jmFang/go-homework-selpg/blob/master/image/d-f.png)
 
-### 2.4 总结
+### 2.4 测试
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/out-2.png)
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/7.png)
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/1.png)
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/2.png)
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/5.png)
+
+更多测试结果，请查看./image目录
+
+### 2.5 总结
 
 重点是解析命令和管道重定向，命令解析可以使用flag包，也可以使用os.Args，对于不同的输入格式，两者各有千秋。golang中的重定向可以通过exec包的cmd开启新线程，执行重定向。输入输出使用io包，等等。程序实现逻辑不难，难在刚接触golang，对于golang的语法和包使用不熟悉，以及相关学习资源较少。整个程序基本是按照原版的selpg.c用golang翻译过来的，算是一次对golang语法使用的练手。
 
