@@ -96,7 +96,29 @@ struct
 
 ### 2.3 IO处理
 
-#### 根据参数解析的结果，设置输入输出
+#### 2.3.1 根据参数解析的结果，设置输入输出
+
+如果输入文件名为空，那么从标准输入（键盘输入），否则从文件输入；如果-d参数为空值，则只是标准的输出，否则根据-d启动另一个线程，利用shell执行该命令。
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/IOtype.png)
+
+#### 2.3.2 根据参数解析的结果，设置换页类型
+
+如果是默认的l-type，则根据行数来换页；
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/pagetype-l.png)
+
+如果是强加的-f类型，则根据换页符来换页。
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/pagetype-f.png)
+
+对于每一种类型，写出的时候也要判断-d参数是否为空，从而选择输出目的地。如果为空，那么是标准输出，
+
+
+
+
+
+
 
 
 
