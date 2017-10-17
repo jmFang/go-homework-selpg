@@ -100,7 +100,7 @@ struct
 
 如果输入文件名为空，那么从标准输入（键盘输入），否则从文件输入；如果-d参数为空值，则只是标准的输出，否则根据-d启动另一个线程，利用shell执行该命令。
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/IOtype.png)
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/sh.png)
 
 #### 2.3.2 根据参数解析的结果，设置换页类型
 
