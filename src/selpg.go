@@ -1,3 +1,8 @@
+/**
+/* anthor :jiamoufang
+/* this program is achieved with reference of 'selpg.c'
+/* something special : use flag package to parse cmi instruction
+*/
 package main
 
 import (
@@ -10,6 +15,10 @@ import (
 	"strconv"
 	"strings"
 )
+
+/*
+* a flag definition of selpg
+ */
 
 var (
 	selpg = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
@@ -29,13 +38,16 @@ type structSelpg struct {
 	printDest  string
 }
 
+// the instruction of "selpg"
 var progname string
 
 func usage() {
-	fmt.Printf("\nUSAGE: %s -sstart_page -eend_page [-f] [-llines_per_page ] \n [-ddest ] [ in_filename ]\n", progname)
+	fmt.Printf("\nUSAGE: %s -sstart_page -eend_page [-f] [-llines_per_page ] [-ddest ] [ in_filename ]\n", progname)
 }
 
 func processArgs(ac int, av []string, psa *structSelpg) {
+
+	selpg.Parsed()
 
 	var tmp = []rune(av[0])
 	var argno int
@@ -84,7 +96,7 @@ func processArgs(ac int, av []string, psa *structSelpg) {
 		switch tmp[1] {
 
 		case 'l':
-			//string to int64
+
 			k, err := strconv.Atoi(string(tmp[2:]))
 			if k < 1 || err != nil {
 				fmt.Fprintf(os.Stderr, "%s: invalid page length %d\n", progname, k)
@@ -92,7 +104,7 @@ func processArgs(ac int, av []string, psa *structSelpg) {
 				os.Exit(6)
 			}
 
-			psa.pageLen = k //强制换回int，一般不会出问题
+			psa.pageLen = k
 			argno++
 
 		case 'f':
@@ -262,7 +274,7 @@ func main() {
 
 	psa.startPage = -1
 	psa.endPage = -1
-	psa.pageLen = 12
+	psa.pageLen = 3
 	psa.inFilename = ""
 	psa.printDest = ""
 	psa.pageType = 'l'
