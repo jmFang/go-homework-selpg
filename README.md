@@ -96,7 +96,7 @@ struct
 
 ### 2.3 IO处理
 
-#### 2.3.1 根据参数解析的结果，设置输入输出
+#### 2.3.1 根据参数解析的结果，设置输入输出# 2.4 
 
 如果输入文件名为空，那么从标准输入（键盘输入），否则从文件输入；如果-d参数为空值，则只是标准的输出，否则根据-d启动另一个线程，利用shell执行该命令。
 
@@ -112,9 +112,28 @@ struct
 
 ![](https://github.com/jmFang/go-homework-selpg/blob/master/image/pagetype-f.png)
 
-如果-d为空，对于默认的-l类型，因为是标准输出所以写出的时候可以按行写出，如果-d不为空，那么先把读取的数据存放在一个buffer，最后再一次写出。
+如果-d为空，对于默认的-l类型，因为是标准输出所以写出的时候可以按行写出如果-d不为空，那么先把读取的数据存放在一个buffer，最后再一次写出。
 
 ![](https://github.com/jmFang/go-homework-selpg/blob/master/image/d-f.png)
+
+### 2.4 总结
+
+重点是解析命令和管道重定向，命令解析可以使用flag包，也可以使用os.Args，对于不同的输入格式，两者各有千秋。golang中的重定向可以通过exec包的cmd开启新线程，执行重定向。输入输出使用io包，等等。程序实现逻辑不难，难在刚接触golang，对于golang的语法和包使用不熟悉，以及相关学习资源较少。整个程序基本是按照原版的selpg.c用golang翻译过来的，算是一次对golang语法使用的练手。
+
+**如果有bug，请不吝赐教！**
+
+## 3. 参考资料
+
+【1】. Building a Simple CLI Tool with Golang ：https://blog.komand.com/build-a-simple-cli-tool-with-golang
+
+【2】. CLI: Command Line Programming with Go - The New Stack：https://thenewstack.io/cli-command-line-programming-with-go/
+
+【3】. 开发 Linux 命令行实用程序：https://www.ibm.com/developerworks/cn/linux/shell/clutil/index.html
+
+【4】. Package flag: https://go-zh.org/pkg/flag/
+
+【5】. Package os: https://go-zh.org/pkg/os/
+
 
 
 
