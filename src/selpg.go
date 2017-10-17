@@ -45,6 +45,9 @@ func usage() {
 	fmt.Printf("\nUSAGE: %s -sstart_page -eend_page [-f] [-llines_per_page ] [-ddest ] [ in_filename ]\n", progname)
 }
 
+/*
+* 对输入的命令参数做解析处理，综合利用flag包和os.Args
+ */
 func processArgs(ac int, av []string, psa *structSelpg) {
 
 	selpg.Parsed()
@@ -154,6 +157,9 @@ func processArgs(ac int, av []string, psa *structSelpg) {
 	} // end if
 }
 
+/*
+* 对输入输出做处理，包括文件读写，管道
+ */
 func processInput(psa structSelpg) {
 	var fin *os.File
 	var fout *os.File
