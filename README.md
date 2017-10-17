@@ -112,7 +112,11 @@ struct
 
 ![](https://github.com/jmFang/go-homework-selpg/blob/master/image/pagetype-f.png)
 
-对于每一种类型，写出的时候也要判断-d参数是否为空，从而选择输出目的地。如果为空，那么是标准输出，
+如果-d为空，对于默认的-l类型，因为是标准输出所以写出的时候可以按行写出，如果-d不为空，那么先把读取的数据存放在一个buffer，最后再一次写出。
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/d-f.png)
+
+
 
 
 
