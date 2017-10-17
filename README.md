@@ -72,7 +72,9 @@ selpg 通过以下方法记住当前页号：如果输入是每页行数固定�
 
 #### 2.1.1 方法一中使用flag包解析命令需要用到的自命令集合 flag subcommand-set
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/subcommandset.png)
+注意，【-s】和 【-e】为必要输入
+
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/flag.png)
 
 #### 2.1.2 方法二中处理一页或输入输出需要用到的参数变量
 
@@ -90,7 +92,7 @@ struct
 
 方法一中要求输入的自命令和子命令的值用空格分开，因此可直接判断，无须多余的解析
 
-![]()
+![](https://github.com/jmFang/go-homework-selpg/blob/master/image/flag-hangle.png)
 
 将解析完成的结果存放进结构体中，传递给IO处理模块，做下一步处理，以上工作由processArgs模块完成
 
@@ -126,7 +128,7 @@ struct
 
 【1】. Building a Simple CLI Tool with Golang ：https://blog.komand.com/build-a-simple-cli-tool-with-golang
 
-【2】. CLI: Command Line Programming with Go - The New Stack：https://thenewstack.io/cli-command-line-programming-with-go/
+【2】. CLI: Command Line Programming with Go ：https://thenewstack.io/cli-command-line-programming-with-go/
 
 【3】. 开发 Linux 命令行实用程序：https://www.ibm.com/developerworks/cn/linux/shell/clutil/index.html
 
