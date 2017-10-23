@@ -76,13 +76,28 @@ selpg 通过以下方法记住当前页号：如果输入是每页行数固定�
 
 注意，【-s】和 【-e】为必要输入
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/flag.png)
+    var (
+      selpg = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+      s     = selpg.Int("s", 0, "the start page required in command selpg")
+      e     = selpg.Int("e", 0, "the end page required in command selpg")
+      l     = selpg.Int("l", 72, "the initial number of line per page")
+      d     = selpg.String("d", "", "the destination of printer")
+      f     = selpg.Bool("f", false, "the flag of new page noted as '\f'")
+    )
+
 
 #### 2.1.2 方法二中处理一页或输入输出需要用到的参数变量
 
 struct
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/struct.png)
+    type structSelpg struct {
+      startPage  int
+      endPage    int
+      inFilename string
+      pageLen    int
+      pageType   int
+      printDest  string
+    }
 
 ### 2.2 参数处理
 
@@ -90,7 +105,41 @@ struct
 
 方法二中利用string的向量和切片性质对输入的命令做字符串比较和切割，从而完成格式认证
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/format-f2.png)
+      if ac < 3 {
+        fmt.Fprintf(os.Stderr, "%s: not enough arguments\n", progname)
+        usage()
+        os.Exit(1)
+      }
+
+      if av[1][0:2] != "-s" {
+        fmt.Fprintf(os.Stderr, "%s: 1st arg should be -sstartPage\n", progname)
+        usage()
+        os.Exit(2)
+      }
+
+      if av[2][0:2] != "-e" {
+        fmt.Printf("%s: 2nd arg should -eendPage\n", progname)
+        usage()
+        os.Exit(4)
+      }
+
+      start, _ := strconv.Atoi(string(av[1][2:]))
+      if start < 1 {
+        fmt.Printf("%s : invalid start page %d\n", progname, start)
+        usage()
+        os.Exit(3)
+      }
+
+      psa.startPage = start
+
+      end, _ := strconv.Atoi(string(av[2][2:]))
+      if end < 1 || end < psa.startPage {
+        fmt.Printf("%s: invalid end page %d\n", progname, end)
+        usage()
+        os.Exit(5)
+      }
+
+      psa.endPage = end
 
 方法一中要求输入的自命令和子命令的值用空格分开，因此可直接判断，无须多余的解析
 
@@ -104,21 +153,98 @@ struct
 
 如果输入文件名为空，那么从标准输入（键盘输入），否则从文件输入；如果-d参数为空值，则只是标准的输出，否则根据-d启动另一个线程，利用shell执行该命令。
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/sh.png)
+    if psa.inFilename == "" {
+        fin = os.Stdin
+      } else {
+        fin, err = os.Open(psa.inFilename)
+        if err != nil {
+          fmt.Fprintf(os.Stderr, "%s: could not open input file \"%s\"\n", progname, psa.inFilename)
+          os.Exit(12)
+        }
+      } // end else
+
+      /* set the output destination */
+      if psa.printDest == "" {
+        fout = os.Stdout
+      } else {
+        str := fmt.Sprintf("-d%s", psa.printDest)
+        cmd = exec.Command("lp", str)
+        _, err := cmd.Output()
+
+        if err != nil {
+          fmt.Fprintf(os.Stderr, "%s: could not open pipe to \"%s\"\n", progname, str)
+          os.Exit(13)
+        }
+
+      } //end else
 
 #### 2.3.2 根据参数解析的结果，设置换页类型
 
 如果是默认的l-type，则根据行数来换页；
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/pagetype-l.png)
+    if psa.pageType == 'l' {
+        for true {
+          line, err = rd.ReadString('\n')
+          if err != nil || io.EOF == err {
+            break
+          }
+
+        lineCtr++
+
+        if lineCtr > psa.pageLen {
+          pageCtr++   //for another page
+          lineCtr = 1 // start from begin of a new page
+
+        }
+
+        if pageCtr >= psa.startPage && pageCtr <= psa.endPage {
+          // not for printer but to stdout
+          if psa.printDest == "" {
+            fmt.Fprintf(fout, "%s", line)
+          } else {
+            res += line
+          }
+        }
+      }
+
 
 如果是强加的-f类型，则根据换页符来换页。
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/pagetype-f.png)
+      } else { // page type is '\f'
+        for true {
+          // read the stdin rune by rune
+          char, _, err1 := rd.ReadRune()
+          if err1 != nil || io.EOF == err {
+            break
+          }
+
+          if char == '\f' {
+            pageCtr++
+          }
+
+          if pageCtr >= psa.startPage && pageCtr <= psa.endPage {
+            // output to stdout
+            if psa.printDest == "" {
+              fmt.Fprintf(fout, "%c", char)
+            } else {
+              res += string(char)
+            }
+          }
+        }
+      }
 
 如果-d为空，对于默认的-l类型，因为是标准输出所以写出的时候可以按行写出如果-d不为空，那么先把读取的数据存放在一个buffer，最后再一次写出。
 
-![](https://github.com/jmFang/go-homework-selpg/blob/master/image/d-f.png)
+      // print destination is not empty
+      if psa.printDest != "" {
+        cmd.Stdin = strings.NewReader(res)
+        cmd.Stdout = os.Stdout
+        err = cmd.Run()
+        if err != nil {
+          fmt.Printf("printing to %s occurs some errors", psa.printDest)
+          os.Exit(1)
+        }
+      }
 
 ### 2.4 测试
 
